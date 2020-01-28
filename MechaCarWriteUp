@@ -1,0 +1,90 @@
+MPG Regression
+There are five variables that (may) influence mpg fuel economy of the MechaCar prototypes. They are vehicle length, vehicle weight, spoiler angle, ground clearance and if the automobile is all-wheel drive. 
+
+Using the following to perform a multiple linear regression, 
+
+lm(mpg ~ vehicle.length + vehicle.weight + spoiler.angle + ground.clearance + AWD, data=mecha_cars)
+
+Our output is:
+Intercept: -1.040E02
+Vehicle length coefficient: 6.267
+Vehicle weight coefficient: 1.245E-03
+Spoiler angle coefficient: 6.877E-02
+Ground clearance coefficient: 3.546
+All wheel drive coefficient: -3.411
+
+The summary analysis performed provided Pr(|t|) values for the Intercept, Vehicle Length coefficient and Ground Clearance are statistically doubtful to provide random amounts of variance to the model. As the intercept is statistically significant, it suggests that there are other variables not included in our analysis which influence the variation in mileage efficiency. 
+
+Given our R-squared value is 0.7149, it suggests ~72% of the variation in fuel economy can be explained by our model and that this model does not predict mileage efficiency for MechaCar prototypes effectively. 
+With a p-value: 5.35e-11, we can reject the null hypothesis that the slope of the linear regression = 0. 
+
+Suspension Coil Summary
+Calling mean, median, variance and standard deviation on the Suspension Coil dataset we derive the following
+
+Mean:  1498.78
+Median: 1500
+Variance: 62.29356
+Standard deviation: 7.892627 
+
+The design specs requiring that the variance of the coils not exceed 100 psi are currently being met, though no segmentation by manufacturing lot was considered. However when we filter the dataset by the three manufacturing lots, we see something much different. 
+
+Lot	Variance
+Lot1	0.9796
+Lot2	7.4694
+Lot3	170.2861
+
+The higher variance in Lot3 suggests a much more volatile manufacturing process is taking place as the variance falls well above the 100 psi threshold. 
+
+Suspension Coil t-test
+In this analysis, I chose to utilize a One Sample t-test to compare the suspension coil's psi results to the previously determined mean population of 1500 psi. 
+
+t.test((susp_coil$PSI),mu=1500)
+
+In this test:
+Ho = there is no statistical difference between the observed mean and the presumed mean (determined to be 1500 psi). 
+Ha = there is a statistical difference between the observed mean and the presumed mean. 
+
+The results of the analysis point to a 95% confidence interval of (1497.507, 1500.053) with a p-value = 0.06028. 
+
+As our p-value is greater than 0.05, we do not have enough evidence to reject the null hypothesis, thus it implies that the results are statistically similar. 
+
+The alternative to this would be to generate a sample set from the overall population and run the same One Sample t-test but using the mu value as the population data set rather than a static 1500 psi. That analysis is also provided as a means of comparison. In the case of the suspension coils, we have a population size of 150, so I used a sample size of 30 (20% of the overall population) versus something bigger which may begin to replicate the entire population if my sample size were too big. 
+
+Similar to the previous test,
+The null hypothesis is that there is no statistical difference between the observed mean and the presumed population mean. 
+The alternative hypothesis is that there is a statistical difference between the observed mean and the presumed population mean. 
+
+The results of the analysis point to a 95% confidence interval of (1496.758, 1500.242) with a p-value = 0.7448. 
+
+As our p-value is greater than 0.05, we do not have enough evidence to reject the null hypothesis, thus it implies that the results are statistically similar. 
+
+As there are three different manufacturing lots for the coils, it is worth considering that there may be some significant difference between the lots. To address this, I performed an ANOVA test by filtering the population into the representative lots (Lot1, Lot2 & Lot3). With a Pr(>F) = 0.014 < 0.05, there is enough to suggest that there is a significant difference in PSI between at least one manufacturing lot and the others. 
+
+When One sample t-tests are performed for the filtered lots (Lot1, Lot2 and Lot3), we see something compelling. 
+t.test((LotN$PSI),mu=mean(susp_coil$PSI)) (where N is the lot number)
+
+Lot	p-value
+Lot1	1.56e-11
+Lot2	0.0005911
+Lot3	0.1589
+
+Lot3's p-value > 0.05 implies that we have confidence in rejecting the null hypothesis that the mean of the Lot3 psi is statistically equivalent to the mean of the population.  
+
+Design Your Own Study
+In the case of assessing the MechaCar (MC) prototype, we want to compare performance metrics of the prototype to currently available cars in the same, or similar, categories (i.e. if the prototype is a sports car, there is no sense in comparing to towing capacity expected in pickup trucks). We also cannot compare characteristics like resale value as a percentage of MSRP or purchase price. While certainly a valuable quality of an automobile, as a prototype, this data will not be available until the car has been on the market for several years. As we are assessing the MC's performance, ultimately cosmetic attributes and creature comforts should be considered in another study. 
+
+Therefore we will consider the following automobile characteristics to address how the MechaCar prototype outperforms the competition. 
+MPG (continuous)
+Acceleration (continuous)
+Crash test rating (1-10 interval)
+Crash avoidance (1-10 interval)
+Emission rating (1-10 interval)
+Reliability rating (1-10 interval)
+
+Questions to ask
+In each of the metrics, there will be an MC score and the scores for all other cars in the same class. We will utilize the Pair t-test to to compare samples from two different populations (in our case, one sample of MC prototype results and the second sample coming from the comparison automobile). 
+In our tests, 
+Ho: The difference between the paired observations is equal to zero
+Ha: The difference between the paired observations is not equal to zero
+
+In the case of determining if the performance of the MC prototype exceeds the performance of comparison peers, we would want to reject the null hypothesis of the paired tests implying there is a difference between the two autos. 
